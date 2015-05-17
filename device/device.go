@@ -90,6 +90,53 @@ func Refresh() (err error) {
 	return
 }
 
+/*
+func GetHistory() (mode string, timespan uint32, resolution uint32, data, err error) {
+
+	conn, err := dbus.SystemBus()
+	if err != nil {
+
+		return
+	}
+	obj := conn.Object("org.freedesktop.UPower", "/org/freedesktop/UPower")
+
+	call := obj.Call("org.freedesktop.UPower.GetHistory", 0)
+	if call.Err != nil {
+
+		return nil, call.Err
+	}
+
+	if err := call.Store(&mode, &timespan, &resolution, &data); err != nil {
+
+		return nil, err
+	}
+
+	return
+}
+
+func GetStatistics() (mode string, data, err error) {
+
+	conn, err := dbus.SystemBus()
+	if err != nil {
+
+		return
+	}
+	obj := conn.Object("org.freedesktop.UPower", "/org/freedesktop/UPower")
+
+	call := obj.Call("org.freedesktop.UPower.GetStatistics", 0)
+	if call.Err != nil {
+
+		return nil, call.Err
+	}
+
+	if err := call.Store(&mode & data); err != nil {
+
+		return nil, err
+	}
+
+	return
+}*/
+
 type Properties struct {
 	NativePath       string
 	Vendor           string
@@ -129,7 +176,7 @@ func GetAllProperties(dev dbus.ObjectPath) (p *Properties, err error) {
 	}
 	obj := conn.Object("org.freedesktop.UPower", dev)
 
-	call := obj.Call("org.freedesktop.DBus.Properties.GetAll", 0, "org.freedesktop.UPower.Device")
+	call := obj.Call("org.freedesktop.DBus.Properties.GetAll", 0, "org.freedesktop.UPower")
 	if call.Err != nil {
 
 		return nil, call.Err
@@ -174,6 +221,7 @@ func GetAllProperties(dev dbus.ObjectPath) (p *Properties, err error) {
 	return
 }
 
+// Get UPower device property
 func GetProperty(dev dbus.ObjectPath, p string) (v dbus.Variant, err error) {
 
 	conn, err := dbus.SystemBus()
@@ -188,6 +236,27 @@ func GetProperty(dev dbus.ObjectPath, p string) (v dbus.Variant, err error) {
 
 		return
 	}
+
+	return
+}
+
+// Some value on the power source changed.
+func SignalChanged() (ch chan *dbus.Signal, err error) {
+
+	conn, err := dbus.SystemBus()
+	if err != nil {
+
+		return
+	}
+
+	call := conn.BusObject().Call("org.freedesktop.DBus.AddMatch", 0, "sender=org.freedesktop.UPower,type=signal,member=Changed")
+	if call.Err != nil {
+
+		return nil, call.Err
+	}
+
+	ch = make(chan *dbus.Signal, 10)
+	conn.Signal(ch)
 
 	return
 }
