@@ -1,6 +1,6 @@
-go-upower
-=====================
+# go-upower
 
-[![go-upower](https://godoc.org/github.com/TheCreeper/go-upower?status.png)](http://godoc.org/github.com/TheCreeper/go-upower)
+[![GoDoc](https://godoc.org/github.com/TheCreeper/go-upower?status.svg)](https://godoc.org/github.com/TheCreeper/go-upower)
 
-Package upower provides an implementation of the [Freedesktop UPower Specification](http://upower.freedesktop.org) using the DBus API.
+Package upower provides an implementation of the reedesktop DBus
+[UPower Specification](http://upower.freedesktop.org).
